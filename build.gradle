@@ -2,6 +2,7 @@ plugins {
     id 'io.jmix' version '2.5.0'
     id 'java'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
+//    id 'com.palantir.docker' version '0.36.0'
 }
 
 apply plugin: 'org.springframework.boot'
@@ -22,7 +23,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.hazelcast:hazelcast'
+
     implementation 'org.springframework.cloud:spring-cloud-starter-vault-config:4.2.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'io.jmix.core:jmix-core-starter'
     implementation 'io.jmix.data:jmix-eclipselink-starter'
@@ -38,6 +43,14 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+
+    modules {
+        module("org.springframework.boot:spring-boot-starter-tomcat") {
+            replacedBy("org.springframework.boot:spring-boot-starter-undertow")
+        }
+    }
+
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -46,6 +59,7 @@ dependencies {
     implementation 'io.jmix.pessimisticlock:jmix-pessimisticlock-starter'
     implementation 'io.jmix.pessimisticlock:jmix-pessimisticlock-flowui-starter'
     implementation 'org.postgresql:postgresql'
+    implementation 'io.jmix.authserver:jmix-authserver-starter'
 }
 
 configurations.implementation {
@@ -67,3 +81,17 @@ idea {
 vaadin {
     optimizeBundle = false
 }
+
+//docker {
+//    dependsOn(tasks.bootJar)
+//    name "$rootProject.name:$version"
+//    dockerfile file('docker/Dockerfile')
+//    files tasks.bootJar.outputs
+//}
+
+//docker-layered {
+//    dependsOn(tasks.bootJar)
+//    name "$rootProject.name:$version"
+//    dockerfile file('docker/Dockerfile_layered')
+//    files tasks.bootJar.outputs
+//}
